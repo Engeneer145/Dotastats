@@ -1,5 +1,6 @@
 package dotastats.nslteam.com.dotastats;
 
+import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -69,8 +70,10 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Yo", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                MyTask task = new MyTask();
+                task.execute();
             }
         });
 
@@ -120,6 +123,27 @@ public class MainActivity extends AppCompatActivity {
             }
         } catch (Exception e) {
             Log.e(TAG, e.toString());
+        }
+    }
+
+    class MyTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Log.e(TAG, "start");
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            getNews();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            Log.e(TAG, "end");
         }
     }
 
