@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by dmyroromaniuk on 17.06.16.
  */
 public class ServiceGenerator {
-    public static final String API_BASE_URL = "http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid=440&count=3&maxlength=300&format=json";
+    public static final String API_BASE_URL = "http://api.steampowered.com";
 
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 

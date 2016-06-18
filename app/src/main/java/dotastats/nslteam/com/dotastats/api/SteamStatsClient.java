@@ -1,20 +1,16 @@
 package dotastats.nslteam.com.dotastats.api;
 
-import java.util.List;
-
-import dotastats.nslteam.com.dotastats.model.AppNews;
-import dotastats.nslteam.com.dotastats.model.NewsItem;
+import dotastats.nslteam.com.dotastats.model.NewsResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by dmyroromaniuk on 17.06.16.
  */
 public interface SteamStatsClient {
-    @GET("/repos/{owner}/{repo}/contributors")
-    Call<List<AppNews>> contributors(
-            @Path("owner") String owner,
-            @Path("repo") String repo
+    @GET("/ISteamNews/GetNewsForApp/v0002/?format=json")
+    Call<NewsResponse> getAll(
+            @Query("appid") String appId
     );
 }

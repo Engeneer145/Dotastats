@@ -1,5 +1,8 @@
 package dotastats.nslteam.com.dotastats.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -7,14 +10,24 @@ import java.util.List;
  */
 public class AppNews {
 
-    private List<NewsItem> newsitems;
+    @SerializedName("appid")
+    @Expose
+    private String appId;
+    @SerializedName("newsitems")
+    @Expose
+    private List<NewsItem> newsItems;
 
-    public AppNews(List<NewsItem> newsitems) {
-        this.newsitems = newsitems;
+    public AppNews(String appId, List<NewsItem> newsitems) {
+        this.appId = appId;
+        this.newsItems = newsitems;
 
     }
 
-    public List<NewsItem> getNewsitems() {
-        return newsitems;
+    public String getAppId() {
+        return appId;
+    }
+
+    public List<NewsItem> getNewsItems() {
+        return newsItems;
     }
 }
