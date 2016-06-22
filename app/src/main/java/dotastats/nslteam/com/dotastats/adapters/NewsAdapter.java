@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import dotastats.nslteam.com.dotastats.R;
 import dotastats.nslteam.com.dotastats.model.NewsItem;
 
@@ -17,48 +19,42 @@ import dotastats.nslteam.com.dotastats.model.NewsItem;
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     private List<NewsItem> dataset;
 
-    // Provide a suitable constructor (depends on the kind of dataset)
     public NewsAdapter(List<NewsItem> mDataset) {
         dataset = mDataset;
     }
 
-    // Create new views (invoked by the layout manager)
     @Override
     public NewsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                      int viewType) {
-        // create a new view
+
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_news, parent, false);
-        // set the view's size, margins, paddings and layout parameters
 
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
         holder.tvTitle.setText(dataset.get(position).getTitle());
         holder.tvUrl.setText(dataset.get(position).getUrl().toString().substring(0, 30));
 
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return dataset != null ? dataset.size() : 0;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.news_title_text)
         public TextView tvTitle;
+        @BindView(R.id.news_url_text)
         public TextView tvUrl;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            this.tvTitle = (TextView) itemView.findViewById(R.id.news_title_text);
-            this.tvUrl = (TextView) itemView.findViewById(R.id.news_url_text);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

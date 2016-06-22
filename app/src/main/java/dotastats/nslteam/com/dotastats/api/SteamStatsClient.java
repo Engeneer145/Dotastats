@@ -1,5 +1,6 @@
 package dotastats.nslteam.com.dotastats.api;
 
+
 import dotastats.nslteam.com.dotastats.model.NewsResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;

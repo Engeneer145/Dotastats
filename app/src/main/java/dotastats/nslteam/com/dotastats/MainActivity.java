@@ -1,6 +1,7 @@
 package dotastats.nslteam.com.dotastats;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +9,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import dotastats.nslteam.com.dotastats.adapters.NewsAdapter;
 import dotastats.nslteam.com.dotastats.api.ServiceGenerator;
 import dotastats.nslteam.com.dotastats.api.SteamStatsClient;
@@ -18,23 +22,29 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
     private static String TAG = MainActivity.class.getSimpleName();
     private static AppNews appNews;
+    
+    @BindView(R.id.main_content)
+    View parentLayout;
+
+    @BindView(R.id.news_recycler_view)
     private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        recyclerView = (RecyclerView) findViewById(R.id.news_recycler_view);
         getNews();
     }
 
@@ -47,9 +57,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -61,13 +68,40 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getNews() {
+
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ServiceGenerator.API_BASE_URL)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(ServiceGenerator.API_BASE_URL)
                 .build();
 
-        // Create an instance of our Steam API interface.
         SteamStatsClient steam = retrofit.create(SteamStatsClient.class);
+
+        // RETROFIT + RX ANDROID
+        /*
+        Observable<NewsResponse> teamFortress = steam.getAll("440");
+
+        teamFortress.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<NewsResponse>() {
+                    @Override
+                    public void call(NewsResponse current) {
+                        appNews = current.getAppNews();
+                        setAdapter();
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        throw new OnErrorFailedException(throwable);
+                    }
+                }, new Action0() {
+                    public void call() {
+                    }
+                });
+
+        */
+
+        // RETROFIT
 
         Call<NewsResponse> call = steam.getAll("440");
 
@@ -87,10 +121,11 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(Call<NewsResponse> call, Throwable t) {
                 Log.e(TAG, call.toString() + " " + t.toString());
 
-                //Snackbar.make(view, "Yo", Snackbar.LENGTH_LONG)
-                //        .setAction("Action", null).show();
+                Snackbar.make(parentLayout, "Yo", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
+
     }
 
 
