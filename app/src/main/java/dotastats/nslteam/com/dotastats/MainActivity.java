@@ -1,12 +1,10 @@
 package dotastats.nslteam.com.dotastats;
 
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,12 +16,13 @@ import dotastats.nslteam.com.dotastats.api.ServiceGenerator;
 import dotastats.nslteam.com.dotastats.api.SteamStatsClient;
 import dotastats.nslteam.com.dotastats.model.AppNews;
 import dotastats.nslteam.com.dotastats.model.NewsResponse;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     View parentLayout;
 
     @BindView(R.id.news_recycler_view)
-    private RecyclerView recyclerView;
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,31 +77,34 @@ public class MainActivity extends AppCompatActivity {
         SteamStatsClient steam = retrofit.create(SteamStatsClient.class);
 
         // RETROFIT + RX ANDROID
-        /*
-        Observable<NewsResponse> teamFortress = steam.getAll("440");
 
-        teamFortress.subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<NewsResponse>() {
+
+        Observable<NewsResponse> teamFortress = steam.getAll("440")
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread());
+
+        teamFortress
+                .subscribe(new Observer<NewsResponse>() {
                     @Override
-                    public void call(NewsResponse current) {
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //handle error
+                    }
+
+                    @Override
+                    public void onNext(NewsResponse current) {
                         appNews = current.getAppNews();
                         setAdapter();
                     }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        throw new OnErrorFailedException(throwable);
-                    }
-                }, new Action0() {
-                    public void call() {
-                    }
                 });
 
-        */
 
         // RETROFIT
 
+        /*
         Call<NewsResponse> call = steam.getAll("440");
 
         call.enqueue(new Callback<NewsResponse>() {
@@ -125,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        */
 
     }
 
